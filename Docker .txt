@@ -1,0 +1,60 @@
+docker search image
+docker pull image
+docker images    ls -a
+vps44719.publiccloud.com.br 
+
+docker container ls -a
+docker stats    
+docker container inspect nome
+docker volume    inspect nome
+docker network   inspect nome
+
+docker exec -it nome bach
+docker exec -it nome ping nome
+$(docker container ls -a)
+
+#Mysql
+docker run -it --name mysql -v mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=217133 -d mysql:latest
+docker start mysql
+docker stop  mysql
+docker rm -f mysql
+docker exec -it mysql bash
+mysql -u root -p
+
+#PhpmyAdmin
+docker run -it --name phpmyadmin -d --link mysql:db -p 8080:80 phpmyadmin
+docker start phpmyadmin
+docker stop  phpmyadmin
+docker rm -f phpmyadmin
+
+#Mqtt
+docker run -p 8080:8080 -p 1883:1883 --name hivemq hivemq/hivemq4
+docker start hivemq
+docker stop  hivemq
+docker rm -f hivemq
+
+#Node-red
+docker run -it -p 1880:1880 --name node-red -v node_red_data:/data nodered/node-red -g
+docker exec -it node-red bash
+node-red admin hash-pw
+$2b$08$KJjffQlDvPQHDU3.QCxuMu.JtnybznESaeP7oFuxwnjtyLHkBr2Nu
+docker start node-red
+docker stop  node-red
+docker rm -f node-red
+
+
+#Postgres
+docker run --name postgres --network=postgres-network -e POSTGRES_PASSWORD=217133 -p 5432:5432 -v /PostgreSQL:/var/lib/postgresql/data -d postgres
+docker start postgres
+docker stop  postgres
+docker rm -f postgres
+
+#PgAdmin
+docker run --name pgadmin  --network=postgres-network -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=edmilsonmlima@hotmail.com -e PGADMIN_DEFAULT_PASSWORD=217133 -d dpage/pgadmin4
+docker start pgadmin
+docker stop  pgadmin
+docker rm -f pgadmin
+
+
+
+
