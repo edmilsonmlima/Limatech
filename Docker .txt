@@ -37,7 +37,6 @@ docker rm -f hivemq
 docker run -it -p 1880:1880 --name node-red -v node_red_data:/data nodered/node-red -g
 docker exec -it node-red bash
 node-red admin hash-pw
-$2b$08$KJjffQlDvPQHDU3.QCxuMu.JtnybznESaeP7oFuxwnjtyLHkBr2Nu
 docker start node-red
 docker stop  node-red
 docker rm -f node-red
