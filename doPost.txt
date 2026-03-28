@@ -10,14 +10,14 @@ function doPost(e) {
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var dia = Utilities.formatDate(agora, Session.getScriptTimeZone(), "dd-MM-yyyy");
+    var hora = Utilities.formatDate(agora, Session.getScriptTimeZone(), "HH:mm:ss");
     var sheet = ss.getSheetByName(dia);
 
     // Se não existir a aba do dia, criar e adicionar cabeçalho + primeira linha
     if (!sheet) {
       sheet = ss.insertSheet(dia);
-      sheet.appendRow(["Timestamp", "Temperatura"]);
-      sheet.appendRow([agora, temperatura]);
-      criarGrafico(sheet);
+      sheet.appendRow(["Hora", "Temperatura"]);
+      sheet.appendRow([hora, temperatura]);      
       return ok();
     }
 
@@ -25,28 +25,25 @@ function doPost(e) {
 
     // Caso a aba tenha apenas cabeçalho
     if (lastRow <= 1) {
-      sheet.appendRow([agora, temperatura]);
-      atualizarGrafico(sheet);
+      sheet.appendRow([hora, temperatura]);     
       return ok();
     }
 
     // Obter último registro
     var lastTimestamp = sheet.getRange(lastRow, 1).getValue();
     var lastTemperatura = sheet.getRange(lastRow, 2).getValue();
-    var diff = agora - lastTimestamp; // em milissegundos
+    var diff = hora - lastTimestamp; // em milissegundos
 
     // Regra 1: registrar se passou TIMEOUT_MS, mesmo sem mudança
     if (diff > TIMEOUT_MS && lastTemperatura != -1) {
       sheet.getRange(lastRow, 1).setValue(new Date(lastTimestamp.getTime() + TIMEOUT_MS));
-      sheet.appendRow([agora, temperatura]);
-      atualizarGrafico(sheet);
+      sheet.appendRow([hora, temperatura]);      
       return ok();
     }
 
     // Regra 2: registrar apenas se temperatura mudou
     if (temperatura !== lastTemperatura) {
-      sheet.appendRow([agora, temperatura]);
-      atualizarGrafico(sheet);
+      sheet.appendRow([hora, temperatura]); 
       return ok();
     }
 
@@ -60,31 +57,6 @@ function doPost(e) {
   }
 }
 
-// Função para criar gráfico
-function criarGrafico(sheet) {
-  var range = sheet.getRange(1, 1, sheet.getLastRow(), 2);
-  var chart = sheet.newChart()
-    .setChartType(Charts.ChartType.LINE)
-    .addRange(range)
-    .setPosition(1, 4, 0, 0)
-    .setOption("title", "Temperatura ao longo do tempo")
-    .setOption("hAxis", { title: "Tempo" })
-    .setOption("vAxis", { title: "Temperatura (°C)" })
-    .build();
-  sheet.insertChart(chart);
-}
-
-// Função para atualizar gráfico existente
-function atualizarGrafico(sheet) {
-  var charts = sheet.getCharts();
-  if (charts.length > 0) {
-    var chart = charts[0].modify()
-      .clearRanges()
-      .addRange(sheet.getRange(1, 1, sheet.getLastRow(), 2))
-      .build();
-    sheet.updateChart(chart);
-  }
-}
 
 function doGet() {
   return ContentService.createTextOutput("OK");
