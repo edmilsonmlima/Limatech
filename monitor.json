@@ -1,0 +1,4 @@
+{
+  "Mqtt":"mqtt://test.mosquitto.org",
+  "Dispositivos":["", ""]
+}
