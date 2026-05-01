@@ -1,4 +1,3 @@
 {
-  "Mqtt":"mqtt://test.mosquitto.org",
-  "Dispositivos":["", ""]
+   "Dispositivos":["debug/cozinha", "debug/sala"]
 }
